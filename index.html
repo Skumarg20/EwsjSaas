@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:3001', {
+            auth: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZDliMzA3ZS1hY2FkLTQ2NzUtOTA2Zi0wMDg2YTlhNGQ4ZGMiLCJ1c2VybmFtZSI6InNhbmplZXYxMjMiLCJpYXQiOjE3MzkyOTk4MDgsImV4cCI6MTczOTMwMzQwOH0.aljOWG0kSyJ0HTN2644LULggJRekDvgD9w5BcHLjufc' }
+        });
+
+        // Connection successful
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket server:', socket.id);
+        });
+
+        // Join the WebSocket room
+        socket.emit('join', '8d9b307e-acad-4675-906f-0086a9a4d8dc');
+
+        socket.on('joined', (message) => {
+            console.log(message);
+        });
+
+        // Create a group
+        socket.emit('createGroup', { name: 'Team A', userIds: ['8d9b307e-acad-4675-906f-0086a9a4d8dc'] });
+
+        // Listen for group creation event
+        socket.on('groupCreated', (group) => {
+            console.log('New group created:', group);
+        });
+
+        // Send a message to the group
+        function sendMessageToGroup() {
+            const messagePayload = {
+                senderId: '8d9b307e-acad-4675-906f-0086a9a4d8dc',  // Your User ID
+                content: 'Hello Team A!',  // Your message
+                groupId: 'faea84c7-cb6e-44a0-9dd8-831656b6604d'  // Target Group ID
+            };
+
+            socket.emit('sendMessage', messagePayload);
+            console.log('Message sent:', messagePayload);
+        }
+
+        // Listen for messages received in the group
+        socket.on('receiveMessage', (message) => {
+            console.log('New message received:', message);
+        });
+
+        // Handle disconnect
+        socket.on('disconnect', () => {
+            console.log('Disconnected from WebSocket server');
+        });
+
+        // Send a test message after 5 seconds (for demo purposes)
+        setTimeout(() => {
+            sendMessageToGroup();
+        }, 5000);
+    </script>
+</body>
+</html>
