@@ -1,61 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>WebSocket Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced Study Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            margin-bottom: 10px;
+        }
+        .section p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <div id="content"></div>
+
     <script>
-        const socket = io('http://localhost:3001', {
-            auth: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZDliMzA3ZS1hY2FkLTQ2NzUtOTA2Zi0wMDg2YTlhNGQ4ZGMiLCJ1c2VybmFtZSI6InNhbmplZXYxMjMiLCJpYXQiOjE3MzkyOTk4MDgsImV4cCI6MTczOTMwMzQwOH0.aljOWG0kSyJ0HTN2644LULggJRekDvgD9w5BcHLjufc' }
-        });
+        // JSON data
+        const data = {
+            "format": "json",
+            "data": "```json\n{\n  \"title\": \"JEE Advanced 60-Week Study Plan\",\n  \"introduction\": \"This plan outlines a structured approach to JEE Advanced preparation over 60 weeks.  Remember, consistency and perseverance are key.  'The only way to do great work is to love what you do.' - Steve Jobs\",\n  \"overall_strategy\": {\n    \"phase1\": {\n      \"duration\": \"Weeks 1-20 (Basic Concept Building)\",\n      \"description\": \"Focus on building a strong foundation in all three subjects.  Prioritize understanding concepts over solving a large number of problems initially.  Start with NCERT textbooks for Chemistry.\"\n    },\n    \"phase2\": {\n      \"duration\": \"Weeks 21-40 (Advanced Concept and Application)\",\n      \"description\": \"Deep dive into advanced concepts.  Increase the problem-solving intensity.  Start incorporating previous year's JEE Advanced papers.\"\n    },\n    \"phase3\": {\n      \"duration\": \"Weeks 41-60 (Revision & Mock Tests)\",\n      \"description\": \"Prioritize revision of all topics.  Focus intensely on mock tests and analysis.  Identify and rectify weak areas.  'Success is not final, failure is not fatal: it is the courage to continue that counts.' - Winston Churchill\"\n    }\n  },\n  \"daily_schedule\": {\n    \"morning\": [\n      { \"time\": \"6:00 - 7:00 AM\", \"activity\": \"Revision of previous day's topics\" },\n      { \"time\": \"7:00 - 9:00 AM\", \"activity\": \"Math: Concepts and 25 problems\" },\n      { \"time\": \"9:00 - 10:00 AM\", \"activity\": \"Break/Exercise\" }\n    ],\n    \"afternoon\": [\n      { \"time\": \"10:00 AM - 12:00 PM\", \"activity\": \"Physics: Concepts and 20 problems\" },\n      { \"time\": \"12:00 - 1:00 PM\", \"activity\": \"Lunch\" },\n      { \"time\": \"1:00 - 3:00 PM\", \"activity\": \"Chemistry: Concepts and 15 problems\" }\n    ],\n    \"evening\": [\n      { \"time\": \"3:00 - 4:00 PM\", \"activity\": \"Break/Exercise\" },\n      { \"time\": \"4:00 - 6:00 PM\", \"activity\": \"Problem Solving: Mixed problems from all subjects (25 problems)\" },\n      { \"time\": \"6:00 - 7:00 PM\", \"activity\": \"Dinner\" },\n      { \"time\": \"7:00 - 8:00 PM\", \"activity\": \"Revision and planning for the next day\" }\n    ]\n  },  \n  \"weekly_targets\": {\n    \"week1-4\": \"Complete basic concepts of one chapter each in Math, Physics and Chemistry.\",\n    \"week5-8\": \"Complete two chapters each in Math, Physics and Chemistry.  Start with easier topics.\",\n    \"week9-12\": \"Continue with chapter completion.  Focus on increasing the number of problems solved per day.\"\n    //Add weekly targets for all 60 weeks. Follow the same structure as above. Adjust chapter count based on your syllabus.\n  },\n  \"monthly_targets\": {\n    \"month1-3\": \"Complete the syllabus of one major topic in each subject.\",\n    \"month4-6\": \"Complete the syllabus of another major topic in each subject. Start practicing previous years' questions.\",\n    \"month7-9\": \"Complete the remaining syllabus. Increase the frequency of mock tests.\",\n    \"month10-12\": \"Intensive revision and mock tests.\"\n   //Add monthly targets for all 12 months. Follow the same structure as above.\n  },\n  \"practice_strategy\": {\n    \"daily_problems\": {\n      \"math\": 50,\n      \"physics\": 40,\n      \"chemistry\": 30\n    },\n    \"problem_types\": \"Mix theory-based, numerical, and application-based problems.\"\n  },\n  \"mock_tests\": {\n    \"frequency\": \"One full-length mock test per week starting from week 20.\",\n    \"analysis\": \"Thoroughly analyze each mock test, identifying weak areas and rectifying mistakes. Focus on improving both accuracy and speed.\"\n  },\n  \"board_exam_balance\": {\n    \"strategy\": \"Integrate board exam preparation with JEE preparation by focusing on NCERT for Chemistry.  If board exams are earlier, prioritize them in the initial weeks, then shift focus to JEE. Time management is key.  Create a separate timetable for board preparation.\"\n  }\n}\n```\n\n\n**Note:** This JSON provides a framework. You need to fill in the weekly and monthly targets based on your specific JEE Advanced syllabus and the topics covered in each chapter.  Adjust the number of problems solved per day based on your progress and comfort level.  Remember to take breaks and maintain a healthy lifestyle throughout your preparation.  Consistency is crucial.  Good luck!\n"
+        };
 
-        // Connection successful
-        socket.on('connect', () => {
-            console.log('Connected to WebSocket server:', socket.id);
-        });
+        // Parse the JSON data
+        const jsonData = JSON.parse(data.data.replace(/```json\n|\n```/g, ''));
 
-        // Join the WebSocket room
-        socket.emit('join', '8d9b307e-acad-4675-906f-0086a9a4d8dc');
+        // Function to display the data on the UI
+        function displayData(data) {
+            const contentDiv = document.getElementById('content');
 
-        socket.on('joined', (message) => {
-            console.log(message);
-        });
+            // Display title
+            const title = document.createElement('h1');
+            title.textContent = data.title;
+            contentDiv.appendChild(title);
 
-        // Create a group
-        socket.emit('createGroup', { name: 'Team A', userIds: ['8d9b307e-acad-4675-906f-0086a9a4d8dc'] });
+            // Display introduction
+            const intro = document.createElement('p');
+            intro.textContent = data.introduction;
+            contentDiv.appendChild(intro);
 
-        // Listen for group creation event
-        socket.on('groupCreated', (group) => {
-            console.log('New group created:', group);
-        });
+            // Display overall strategy
+            const strategy = document.createElement('div');
+            strategy.className = 'section';
+            strategy.innerHTML = `<h2>Overall Strategy</h2>`;
+            for (const phase in data.overall_strategy) {
+                strategy.innerHTML += `<p><strong>${data.overall_strategy[phase].duration}:</strong> ${data.overall_strategy[phase].description}</p>`;
+            }
+            contentDiv.appendChild(strategy);
 
-        // Send a message to the group
-        function sendMessageToGroup() {
-            const messagePayload = {
-                senderId: '8d9b307e-acad-4675-906f-0086a9a4d8dc',  // Your User ID
-                content: 'Hello Team A!',  // Your message
-                groupId: 'faea84c7-cb6e-44a0-9dd8-831656b6604d'  // Target Group ID
-            };
+            // Display daily schedule
+            const dailySchedule = document.createElement('div');
+            dailySchedule.className = 'section';
+            dailySchedule.innerHTML = `<h2>Daily Schedule</h2>`;
+            for (const time in data.daily_schedule) {
+                dailySchedule.innerHTML += `<h3>${time}</h3>`;
+                data.daily_schedule[time].forEach(activity => {
+                    dailySchedule.innerHTML += `<p><strong>${activity.time}:</strong> ${activity.activity}</p>`;
+                });
+            }
+            contentDiv.appendChild(dailySchedule);
 
-            socket.emit('sendMessage', messagePayload);
-            console.log('Message sent:', messagePayload);
+            // Display weekly targets
+            const weeklyTargets = document.createElement('div');
+            weeklyTargets.className = 'section';
+            weeklyTargets.innerHTML = `<h2>Weekly Targets</h2>`;
+            for (const week in data.weekly_targets) {
+                weeklyTargets.innerHTML += `<p><strong>${week}:</strong> ${data.weekly_targets[week]}</p>`;
+            }
+            contentDiv.appendChild(weeklyTargets);
+
+            // Display monthly targets
+            const monthlyTargets = document.createElement('div');
+            monthlyTargets.className = 'section';
+            monthlyTargets.innerHTML = `<h2>Monthly Targets</h2>`;
+            for (const month in data.monthly_targets) {
+                monthlyTargets.innerHTML += `<p><strong>${month}:</strong> ${data.monthly_targets[month]}</p>`;
+            }
+            contentDiv.appendChild(monthlyTargets);
+
+            // Display practice strategy
+            const practiceStrategy = document.createElement('div');
+            practiceStrategy.className = 'section';
+            practiceStrategy.innerHTML = `<h2>Practice Strategy</h2>`;
+            practiceStrategy.innerHTML += `<p><strong>Daily Problems:</strong> Math - ${data.practice_strategy.daily_problems.math}, Physics - ${data.practice_strategy.daily_problems.physics}, Chemistry - ${data.practice_strategy.daily_problems.chemistry}</p>`;
+            practiceStrategy.innerHTML += `<p><strong>Problem Types:</strong> ${data.practice_strategy.problem_types}</p>`;
+            contentDiv.appendChild(practiceStrategy);
+
+            // Display mock tests
+            const mockTests = document.createElement('div');
+            mockTests.className = 'section';
+            mockTests.innerHTML = `<h2>Mock Tests</h2>`;
+            mockTests.innerHTML += `<p><strong>Frequency:</strong> ${data.mock_tests.frequency}</p>`;
+            mockTests.innerHTML += `<p><strong>Analysis:</strong> ${data.mock_tests.analysis}</p>`;
+            contentDiv.appendChild(mockTests);
+
+            // Display board exam balance
+            const boardExam = document.createElement('div');
+            boardExam.className = 'section';
+            boardExam.innerHTML = `<h2>Board Exam Balance</h2>`;
+            boardExam.innerHTML += `<p><strong>Strategy:</strong> ${data.board_exam_balance.strategy}</p>`;
+            contentDiv.appendChild(boardExam);
         }
 
-        // Listen for messages received in the group
-        socket.on('receiveMessage', (message) => {
-            console.log('New message received:', message);
-        });
-
-        // Handle disconnect
-        socket.on('disconnect', () => {
-            console.log('Disconnected from WebSocket server');
-        });
-
-        // Send a test message after 5 seconds (for demo purposes)
-        setTimeout(() => {
-            sendMessageToGroup();
-        }, 5000);
+        // Call the function to display the data
+        displayData(jsonData);
     </script>
 </body>
 </html>
